@@ -15,14 +15,14 @@ const db = require('./models');
 // Синхронизация с облачной БД Neon
 db.sequelize.sync()
   .then(() => {
-    console.log('База данных Neon успешно синхронизирована.');
+    console.log('БД Neon успешно синхронизирована.');
   })
   .catch((err) => {
     console.error('Ошибка синхронизации с БД:', err);
   });
 
 app.get('/', (req, res) => {
-  res.send('Бэкенд-сервер для Pet Project запущен!');
+  res.send('Сервер запущен');
 });
 
 // маршруты 
