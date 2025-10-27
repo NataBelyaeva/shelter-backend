@@ -20,5 +20,6 @@ db.sequelize = sequelize;
 
 // Подключаем модель Pet
 db.pets = require('./pet.model.js')(sequelize, Sequelize);
+db.events = require("./event.model.js")(sequelize, Sequelize);
 
 module.exports = db;

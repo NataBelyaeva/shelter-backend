@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 
 // маршруты 
 require('./routes/pet.routes.js')(app);
+require("./routes/event.routes.js")(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
