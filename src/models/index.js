@@ -22,5 +22,6 @@ db.sequelize = sequelize;
 db.pets = require('./pet.model.js')(sequelize, Sequelize);
 db.events = require("./event.model.js")(sequelize, Sequelize);
 db.settings = require("./settings.model.js")(sequelize, Sequelize);
+db.user = require("./user.model.js")(sequelize, Sequelize);
 
 module.exports = db;

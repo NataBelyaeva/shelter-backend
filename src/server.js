@@ -1,4 +1,4 @@
-// src/server.js (обновленный)
+// src/server.js
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 require('./routes/pet.routes.js')(app);
 require("./routes/event.routes.js")(app);
 require("./routes/settings.routes.js")(app);
+require('./routes/auth.routes')(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
