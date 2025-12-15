@@ -1,5 +1,4 @@
 // src/models/user.model.js
-
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("user", {
         // Мы используем id в качестве первичного ключа

@@ -1,3 +1,4 @@
+// src/models/event.model.js
 module.exports = (sequelize, Sequelize) => {
     const Event = sequelize.define("event", {
         // Изображение: Путь к файлу на сервере

@@ -1,3 +1,4 @@
+// src/controllers/auth.controller.js
 const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
@@ -5,10 +6,9 @@ const User = db.user;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-// ------------------------------------------------------------------
 // 1. ВХОД В СИСТЕМУ (SIGNIN)
 // Получение токена для доступа к защищенным маршрутам
-// ------------------------------------------------------------------
+
 exports.signin = async (req, res) => {
     try {
         const user = await User.findOne({

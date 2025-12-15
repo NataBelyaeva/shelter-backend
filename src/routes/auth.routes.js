@@ -1,3 +1,4 @@
+// src/routes/auth.routes.js
 const controller = require("../controllers/auth.controller");
 const cors = require('cors'); // Подключаем CORS, чтобы разрешить запросы с фронтенда
 
