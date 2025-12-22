@@ -52,3 +52,50 @@ exports.signin = async (req, res) => {
         res.status(500).send({ message: error.message || "Ошибка входа" });
     }
 };
+
+// 2. РЕГИСТРАЦИЯ (СОЗДАНИЕ) НОВОГО ПОЛЬЗОВАТЕЛЯ
+exports.signup = async (req, res) => {
+    try {
+        // Проверяем, не занято ли имя пользователя
+        const userExists = await User.findOne({ where: { username: req.body.username } });
+        if (userExists) {
+            return res.status(400).send({ message: "Ошибка: Логин уже занят!" });
+        }
+
+        // Создаем пользователя в БД
+        await User.create({
+            username: req.body.username,
+            password: bcrypt.hashSync(req.body.password, 8) // Хешируем пароль
+        });
+
+        res.status(201).send({ message: "Пользователь успешно зарегистрирован!", username: req.body.username });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+
+// 3. СМЕНА ПАРОЛЯ
+exports.changePassword = async (req, res) => {
+    try {
+        // req.userId берется из middleware verifyToken
+        const user = await User.findByPk(req.userId);
+
+        if (!user) {
+            return res.status(404).send({ message: "Пользователь не найден." });
+        }
+
+        // Проверяем старый пароль
+        const passwordIsValid = bcrypt.compareSync(req.body.currentPassword, user.password);
+        if (!passwordIsValid) {
+            return res.status(401).send({ message: "Неверный текущий пароль!" });
+        }
+
+        // Обновляем пароль (хешируем новый)
+        user.password = bcrypt.hashSync(req.body.newPassword, 8);
+        await user.save();
+
+        res.status(200).send({ message: "Пароль успешно изменен!" });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};

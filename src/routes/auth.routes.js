@@ -1,23 +1,34 @@
-// src/routes/auth.routes.js
+const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/auth.controller");
-const cors = require('cors'); // Подключаем CORS, чтобы разрешить запросы с фронтенда
+const cors = require('cors');
 
 module.exports = function(app) {
-    // Используем CORS для всех маршрутов
     app.use(cors());
 
-    // Middleware для установки заголовков, нужных для JWT
     app.use(function(req, res, next) {
-      res.header(
-        "Access-Control-Allow-Headers",
-        "x-access-token, Origin, Content-Type, Accept"
-      );
-      next();
+        res.header(
+            "Access-Control-Allow-Headers",
+            "x-access-token, Origin, Content-Type, Accept"
+        );
+        next();
     });
 
-    // Маршрут для входа в систему (возвращает JWT)
+    // Публичный маршрут для входа
+    app.post("/api/auth/signin", controller.signin);
+
+    // ЗАЩИЩЕННЫЕ МАРШРУТЫ (требуют токен в заголовке)
+    
+    // Создание нового пользователя (только залогиненный админ может создать другого)
     app.post(
-      "/api/auth/signin",
-      controller.signin
+        "/api/auth/signup", 
+        [authJwt.verifyToken], 
+        controller.signup
+    );
+
+    // Смена собственного пароля
+    app.put(
+        "/api/auth/change-password", 
+        [authJwt.verifyToken], 
+        controller.changePassword
     );
 };
