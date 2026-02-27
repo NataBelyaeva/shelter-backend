@@ -1,6 +1,6 @@
-// src/controllers/pet.controller.js
 const db = require('../models');
 const Pet = db.pets;
+const { Op } = require('sequelize'); // Импортируем операторы Sequelize для фильтрации
 
 //  CREATE: Создание нового питомца
 exports.create = (req, res) => {
@@ -24,9 +24,7 @@ exports.create = (req, res) => {
     tray: req.body.tray,
   };
 
-  // Проверяем, был ли загружен файл
   if (req.file) {
-    // Формируем путь, который будет сохранен в БД
     petData.photo = `/uploads/${req.file.filename}`;
   }
 
@@ -43,9 +41,48 @@ exports.create = (req, res) => {
 
 // ---
 
-// READ (All): Получение всех питомцев
+// READ (All): Получение всех питомцев с расширенной фильтрацией
 exports.findAll = (req, res) => {
-  Pet.findAll()
+  const { gender, sterilized, tray, health, hasDescription, name } = req.query;
+  let condition = {};
+
+  // 1. Фильтр по полу (точное совпадение: male/female)
+  if (gender) {
+    condition.gender = gender;
+  }
+
+  // 2. Стерилизация (кастрирован)
+  if (sterilized !== undefined) {
+    condition.sterilized = (sterilized === 'true');
+  }
+
+  // 3. Приучен к лотку
+  if (tray !== undefined) {
+    condition.tray = (tray === 'true');
+  }
+
+  // 4. Поиск по описанию здоровья (частичное совпадение)
+  if (health) {
+    condition.health = { [Op.iLike]: `%${health}%` };
+  }
+
+  // 4. ФИЛЬТР: Есть описание или нет
+  if (hasDescription !== undefined) {
+    if (hasDescription === 'true') {
+      // Ищем где НЕ null и НЕ пустая строка
+      condition.description = { [Op.and]: [{ [Op.ne]: null }, { [Op.ne]: '' }] };
+    } else {
+      // Ищем где либо null, либо пустая строка
+      condition.description = { [Op.or]: [{ [Op.eq]: null }, { [Op.eq]: '' }] };
+    }
+  }
+
+  // 6. Поиск по имени
+  if (name) {
+    condition.name = { [Op.iLike]: `%${name}%` };
+  }
+
+  Pet.findAll({ where: condition })
     .then(data => {
       res.send(data);
     })
@@ -62,7 +99,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Pet.findByPk(id) // Поиск по первичному ключу (Primary Key)
+  Pet.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
@@ -84,10 +121,8 @@ exports.findOne = (req, res) => {
 // UPDATE: Обновление питомца по id
 exports.update = (req, res) => {
   const id = req.params.id;
-
   const updateData = req.body;
 
-  // Если в запросе на обновление есть новый файл, добавляем путь к нему
   if (req.file) {
       updateData.photo = `/uploads/${req.file.filename}`;
   }
@@ -96,14 +131,10 @@ exports.update = (req, res) => {
     where: { id: id },
   })
     .then(num => {
-      if (num[0] === 1) { // num - это массив, где первый элемент - количество обновленных строк
-        res.send({
-          message: 'Питомец был успешно обновлен.',
-        });
+      if (num[0] === 1) {
+        res.send({ message: 'Питомец был успешно обновлен.' });
       } else {
-        res.send({
-          message: `Не удалось обновить питомца с id=${id}. Возможно, он не был найден или тело запроса пустое.`,
-        });
+        res.send({ message: `Не удалось обновить питомца с id=${id}.` });
       }
     })
     .catch(err => {
@@ -124,13 +155,9 @@ exports.delete = (req, res) => {
   })
     .then(num => {
       if (num === 1) {
-        res.send({
-          message: 'Питомец был успешно удален!',
-        });
+        res.send({ message: 'Питомец был успешно удален!' });
       } else {
-        res.send({
-          message: `Не удалось удалить питомца с id=${id}. Возможно, он не был найден.`,
-        });
+        res.send({ message: `Не удалось удалить питомца с id=${id}.` });
       }
     })
     .catch(err => {
