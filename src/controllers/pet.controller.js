@@ -82,7 +82,7 @@ exports.findAll = (req, res) => {
     condition.name = { [Op.iLike]: `%${name}%` };
   }
 
-  Pet.findAll({ where: condition })
+  Pet.findAll({ where: condition, order: [['updatedAt', 'DESC']] })
     .then(data => {
       res.send(data);
     })
