@@ -1,5 +1,14 @@
 // src/models/index.js
 const { Sequelize } = require('sequelize');
+
+try {
+  const pg = require('pg');
+  console.log('PG FOUND');
+  console.log(pg);
+} catch (err) {
+  console.error('PG NOT FOUND');
+  console.error(err);
+}
 require('dotenv').config();
 
 // Подключаемся к БД, используя DATABASE_URL из .env
