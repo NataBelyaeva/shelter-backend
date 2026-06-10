@@ -18,7 +18,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// Подключаем модель Pet
+// Подключаем модели
 db.pets = require('./pet.model.js')(sequelize, Sequelize);
 db.events = require("./event.model.js")(sequelize, Sequelize);
 db.settings = require("./settings.model.js")(sequelize, Sequelize);

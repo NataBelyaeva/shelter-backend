@@ -1,3 +1,4 @@
+// src/routes/auth.routes.js
 const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/auth.controller");
 const cors = require('cors');

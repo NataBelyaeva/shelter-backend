@@ -12,7 +12,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         }
-        // Роль мы пока не добавляем, предполагая, что все пользователи — администраторы
     }, {
         // Имя таблицы в БД
         tableName: 'users' 

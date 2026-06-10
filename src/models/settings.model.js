@@ -7,12 +7,12 @@ module.exports = (sequelize, Sequelize) => {
         cardNumber: {
             type: Sequelize.STRING,
             allowNull: true, // Разрешаем пустое, если реквизиты еще не добавлены
-            field: 'card_number' // Имя колонки в базе данных (snake_case)
+            field: 'card_number' 
         },
         accountNumber: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'account_number' // Имя колонки в базе данных (snake_case)
+            field: 'account_number'
         }
     }, {
         // Запрещаем автоматическое добавление полей createdAt и updatedAt

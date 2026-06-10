@@ -8,15 +8,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING(100), 
-        allowNull: false, // обязательное поле
+        allowNull: false, 
       },
       age: {
         type: DataTypes.STRING(50),
-        allowNull: false, // обязательное поле
+        allowNull: false, 
       },
       gender: {
         type: DataTypes.STRING(20), 
-        allowNull: false, // обязательное поле
+        allowNull: false, 
       },
       health: {
         type: DataTypes.STRING(150),

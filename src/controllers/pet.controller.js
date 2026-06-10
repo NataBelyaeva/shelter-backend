@@ -1,3 +1,4 @@
+// src/controllers/pet.controller.js
 const db = require('../models');
 const Pet = db.pets;
 const { Op } = require('sequelize'); // Импортируем операторы Sequelize для фильтрации
