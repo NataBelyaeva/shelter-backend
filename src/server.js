@@ -3,8 +3,21 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+const corsOptions = {
+  origin: [
+    'https://vercel-user-frontend-k6me7wgms-shelter-s-projects.vercel.app',
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
+  credentials: true
+};
+
 const app = express();
-app.use(cors());
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // важно для preflight
+
 app.use(express.json());
 
 // Делаем папку public/uploads доступной статически
